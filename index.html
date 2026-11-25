@@ -3,90 +3,584 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Spotify Clone</title>
+    <title>Spotify – Web Player: Music for everyone</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+    <!-- Google Fonts: Circular/Inter styling -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="player">
-        <!-- Spotify Logo -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" alt="Spotify Logo" class="spotify-logo">
+<body class="spotify-theme">
+    <!-- Main App Container -->
+    <div id="app" class="spotify-app">
 
-        <h2>Mini Spotify</h2>
-        <button id="theme-toggle">Toggle Theme</button>
-
-        <div class="auth-container">
-            <div id="logged-out-view">
-                <input type="text" id="auth-username" placeholder="Username" aria-label="Username">
-                <input type="password" id="auth-password" placeholder="Password" aria-label="Password">
-                <button id="login-btn">Login</button>
-                <button id="register-btn">Register</button>
+        <!-- Top Navigation / Search Header (for Mobile / Tablet) -->
+        <header class="mobile-top-bar">
+            <div class="logo-area">
+                <svg class="spotify-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.508 17.308c-.218.358-.684.474-1.042.256-2.856-1.745-6.452-2.14-10.686-1.172-.41.094-.817-.162-.911-.572-.094-.41.162-.817.572-.911 4.636-1.06 8.607-.615 11.811 1.348.358.218.474.693.256 1.051zm1.47-3.263c-.276.446-.86.589-1.306.313-3.269-2.008-8.25-2.59-12.115-1.417-.502.152-1.033-.134-1.185-.636-.152-.502.134-1.033.636-1.185 4.414-1.34 9.914-.688 13.657 1.619.446.276.589.86.313 1.306zm.126-3.41c-3.918-2.327-10.375-2.541-14.11-1.407-.602.182-1.242-.162-1.424-.764-.182-.602.162-1.242.764-1.424 4.29-1.302 11.417-1.055 15.932 1.626.541.321.716 1.02.395 1.561-.321.541-1.02.716-1.557.408z"/>
+                </svg>
+                <span>Spotify</span>
             </div>
-            <div id="logged-in-view" style="display: none;">
-                <span id="welcome-message">Welcome, Guest!</span>
-                <button id="logout-btn">Logout</button>
+            <div class="user-profile-badge" id="mobile-user-profile-btn">
+                <span class="user-avatar-initial" id="mobile-avatar-text">G</span>
             </div>
-        </div>
+        </header>
 
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search for songs..." aria-label="Search for songs">
-            <button id="search-button">🔍</button>
-        </div>
+        <!-- Body Layout (Sidebar + Main Content + Right Drawer) -->
+        <div class="app-body">
+            
+            <!-- LEFT SIDEBAR: Nav + Library -->
+            <aside class="sidebar" id="sidebar">
+                <!-- Nav Card -->
+                <div class="sidebar-box nav-section">
+                    <div class="brand-header">
+                        <svg class="spotify-logo-svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.508 17.308c-.218.358-.684.474-1.042.256-2.856-1.745-6.452-2.14-10.686-1.172-.41.094-.817-.162-.911-.572-.094-.41.162-.817.572-.911 4.636-1.06 8.607-.615 11.811 1.348.358.218.474.693.256 1.051zm1.47-3.263c-.276.446-.86.589-1.306.313-3.269-2.008-8.25-2.59-12.115-1.417-.502.152-1.033-.134-1.185-.636-.152-.502.134-1.033.636-1.185 4.414-1.34 9.914-.688 13.657 1.619.446.276.589.86.313 1.306zm.126-3.41c-3.918-2.327-10.375-2.541-14.11-1.407-.602.182-1.242-.162-1.424-.764-.182-.602.162-1.242.764-1.424 4.29-1.302 11.417-1.055 15.932 1.626.541.321.716 1.02.395 1.561-.321.541-1.02.716-1.557.408z"/>
+                        </svg>
+                        <span class="brand-title">Spotify</span>
+                    </div>
+                    <nav class="primary-nav">
+                        <button class="nav-link active" id="nav-home-btn" data-view="home">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33A2 2 0 0 1 22 7.577V21a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-5h-3v5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"/></svg>
+                            <span>Home</span>
+                        </button>
+                        <button class="nav-link" id="nav-search-btn" data-view="search">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.533 1.278a9.255 9.255 0 1 0 5.727 16.538l5.73 5.73a.75.75 0 0 0 1.06-1.061l-5.73-5.73A9.255 9.255 0 0 0 10.533 1.278zM2.778 10.533a7.755 7.755 0 1 1 15.51 0 7.755 7.755 0 0 1-15.51 0z"/></svg>
+                            <span>Search</span>
+                        </button>
+                    </nav>
+                </div>
 
-        <div class="main-content-wrapper">
-            <div id="main-player-content" style="display: none;">
-                <div class="current-song">
-                    <img src="" alt="Album Cover" id="cover" class="song-cover">
-                <h3 id="title">Song Title</h3>
-                <canvas id="visualizer"></canvas>
-                <div id="lyrics-container" style="display: none;">
-                        <h4>Lyrics</h4>
-                        <pre id="lyrics-text">Lyrics will appear here...</pre>
+                <!-- Library Card -->
+                <div class="sidebar-box library-section">
+                    <div class="library-header">
+                        <div class="library-title-group">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1.5-.866l-5 3zM16 4.732l4-2.4V20h-4V4.732zM8 3a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3zm2 1v16h1V4h-1z"/></svg>
+                            <span>Your Library</span>
+                        </div>
+                        <div class="library-actions">
+                            <button id="create-playlist-quick-btn" class="icon-btn-ghost" title="Create playlist or folder">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5a1 1 0 0 1 1-1z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Chips -->
+                    <div class="library-chips">
+                        <span class="chip active" data-filter="all">Playlists</span>
+                        <span class="chip" data-filter="artists">Artists</span>
+                        <span class="chip" data-filter="albums">Albums</span>
+                    </div>
+
+                    <!-- Playlists List -->
+                    <div class="library-list-container" id="library-playlists-list">
+                        <!-- Pinned: Liked Songs -->
+                        <div class="library-item liked-songs-item" id="liked-songs-nav-item">
+                            <div class="liked-songs-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            </div>
+                            <div class="library-item-info">
+                                <div class="item-title">Liked Songs</div>
+                                <div class="item-subtitle"><span class="pin-badge">📌</span> Playlist • <span id="liked-songs-count">0</span> songs</div>
+                            </div>
+                        </div>
+
+                        <!-- User playlists inserted here -->
+                        <div id="custom-playlists-container"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="main-content" id="main-content">
+                <!-- Top Sticky Navbar -->
+                <div class="top-nav-bar" id="top-nav-bar">
+                    <div class="top-nav-left">
+                        <button class="nav-history-btn" id="history-back-btn" title="Go back">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.957 2.793a1 1 0 0 1 0 1.414L8.164 12l7.793 7.793a1 1 0 1 1-1.414 1.414L5.336 12l9.207-9.207a1 1 0 0 1 1.414 0z"/></svg>
+                        </button>
+                        <button class="nav-history-btn" id="history-forward-btn" title="Go forward">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.043 2.793a1 1 0 0 0 0 1.414L15.836 12l-7.793 7.793a1 1 0 0 0 1.414 1.414L18.664 12 9.457 2.793a1 1 0 0 0-1.414 0z"/></svg>
+                        </button>
+
+                        <!-- Search Input (Visible in Search View) -->
+                        <div class="search-box-wrapper" id="top-search-wrapper" style="display: none;">
+                            <svg class="search-input-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.533 1.278a9.255 9.255 0 1 0 5.727 16.538l5.73 5.73a.75.75 0 0 0 1.06-1.061l-5.73-5.73A9.255 9.255 0 0 0 10.533 1.278zM2.778 10.533a7.755 7.755 0 1 1 15.51 0 7.755 7.755 0 0 1-15.51 0z"/></svg>
+                            <input type="text" id="global-search-input" placeholder="What do you want to play?" autocomplete="off">
+                            <button id="clear-search-btn" class="clear-search-btn" style="display:none;">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="top-nav-right">
+                        <button class="badge-pill-btn" id="import-local-btn" title="Import full MP3 songs from your PC">
+                            📂 Import Songs
+                        </button>
+                        <input type="file" id="local-audio-input" accept="audio/*" multiple style="display: none;">
+                        <button class="badge-pill-btn" id="wrapped-btn" title="Listening stats">
+                            ✨ Spotify Stats
+                        </button>
+                        <button class="badge-pill-btn" id="eq-modal-btn" title="Equalizer">
+                            🎛️ Equalizer
+                        </button>
+
+                        <div class="user-profile-menu-container">
+                            <button class="user-profile-btn" id="user-menu-btn">
+                                <span class="user-avatar" id="desktop-avatar">U</span>
+                                <span class="user-display-name" id="user-name-display">Guest</span>
+                                <svg viewBox="0 0 16 16" fill="currentColor" class="caret-icon"><path d="m14 6-6 6-6-6h12z"/></svg>
+                            </button>
+
+                            <!-- Profile Dropdown -->
+                            <div class="profile-dropdown" id="profile-dropdown" style="display: none;">
+                                <div class="dropdown-header" id="dropdown-user-info">Logged in as <strong>Guest</strong></div>
+                                <hr class="dropdown-divider">
+                                <button class="dropdown-item" id="open-auth-modal-btn">Account / Login</button>
+                                <button class="dropdown-item" id="logout-menu-item" style="display: none;">Log out</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <audio id="audio" src="" crossorigin="anonymous"></audio>
+                <!-- VIEW CONTAINER: Dynamic Content View -->
+                <div class="view-content-wrapper" id="view-content-wrapper">
 
-                <div class="controls">
-                    <button id="prev">⏮️</button>
-                    <button id="play">▶️</button>
-                    <button id="next">⏭️</button>
+                    <!-- 1. HOME VIEW -->
+                    <section class="page-view active" id="view-home">
+                        <div class="hero-gradient-overlay" id="home-ambient-bg"></div>
+                        <div class="view-inner-pad">
+                            <h1 class="greeting-heading" id="greeting-text">Good afternoon</h1>
+
+                            <!-- Quick 6-Grid Section -->
+                            <div class="quick-grid" id="quick-grid">
+                                <!-- Cards injected via JS -->
+                            </div>
+
+                            <!-- Curated Section 1 -->
+                            <div class="shelf-section">
+                                <div class="shelf-header">
+                                    <h2>Made For You</h2>
+                                    <span class="show-all-link" data-search="Top Hits">Show all</span>
+                                </div>
+                                <div class="shelf-carousel" id="shelf-made-for-you">
+                                    <!-- Cards injected via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Curated Section 2 -->
+                            <div class="shelf-section">
+                                <div class="shelf-header">
+                                    <h2>Trending Artists & Hits</h2>
+                                    <span class="show-all-link" data-search="Pop 2026">Show all</span>
+                                </div>
+                                <div class="shelf-carousel" id="shelf-trending">
+                                    <!-- Cards injected via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Curated Section 3 -->
+                            <div class="shelf-section">
+                                <div class="shelf-header">
+                                    <h2>Chill & Focus Beats</h2>
+                                    <span class="show-all-link" data-search="Lofi Chill">Show all</span>
+                                </div>
+                                <div class="shelf-carousel" id="shelf-chill">
+                                    <!-- Cards injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 2. SEARCH & BROWSE VIEW -->
+                    <section class="page-view" id="view-search" style="display: none;">
+                        <div class="view-inner-pad">
+                            <h2 class="section-title" id="search-view-title">Browse all</h2>
+                            
+                            <!-- Category cards when not searching -->
+                            <div class="browse-categories-grid" id="browse-categories-grid">
+                                <!-- Category tiles populated via JS -->
+                            </div>
+
+                            <!-- Search Results Table when query is entered -->
+                            <div class="search-results-container" id="search-results-container" style="display: none;">
+                                <div class="search-tabs">
+                                    <span class="search-tab active" data-filter="all">All</span>
+                                    <span class="search-tab" data-filter="songs">Songs</span>
+                                    <span class="search-tab" data-filter="artists">Artists</span>
+                                </div>
+
+                                <!-- Top Result + Top Songs -->
+                                <div class="search-top-row">
+                                    <div class="top-result-card" id="top-result-card">
+                                        <!-- Top match -->
+                                    </div>
+                                    <div class="top-songs-list" id="search-songs-list">
+                                        <!-- Track list -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 3. PLAYLIST / ALBUM DETAIL VIEW -->
+                    <section class="page-view" id="view-playlist" style="display: none;">
+                        <div class="playlist-hero-banner" id="playlist-hero-banner">
+                            <div class="playlist-cover-art" id="playlist-hero-cover">
+                                <img src="" alt="Playlist Cover" id="playlist-hero-img">
+                                <div class="cover-art-placeholder" id="playlist-hero-placeholder">🎵</div>
+                            </div>
+                            <div class="playlist-meta">
+                                <span class="playlist-type" id="playlist-type-badge">PUBLIC PLAYLIST</span>
+                                <h1 class="playlist-title" id="playlist-hero-title">Playlist Title</h1>
+                                <p class="playlist-description" id="playlist-hero-desc">Curated tracks and top music.</p>
+                                <div class="playlist-stats">
+                                    <span class="creator-name" id="playlist-creator-name">Spotify</span>
+                                    <span class="dot-separator">•</span>
+                                    <span id="playlist-songs-count">0 songs</span>
+                                    <span class="dot-separator">•</span>
+                                    <span id="playlist-total-duration">about 45 min</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar (Play button, Like button, More options) -->
+                        <div class="playlist-action-bar">
+                            <button class="playlist-play-btn" id="playlist-hero-play-btn" title="Play playlist">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
+                            </button>
+                            <button class="action-icon-btn heart-btn" id="playlist-hero-heart-btn" title="Save to Your Library">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            </button>
+                            <button class="action-icon-btn" id="playlist-more-options-btn" title="More options">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm7.5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm7.5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- Tracklist Table -->
+                        <div class="tracklist-container">
+                            <div class="tracklist-header">
+                                <div class="col-num">#</div>
+                                <div class="col-title">Title</div>
+                                <div class="col-album">Album</div>
+                                <div class="col-date">Date added</div>
+                                <div class="col-duration">
+                                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm9-3.25V8H5.75v1.5H9a1.5 1.5 0 0 0 1.5-1.5V4.75H9z"/></svg>
+                                </div>
+                            </div>
+                            <div class="tracklist-body" id="playlist-tracklist-body">
+                                <!-- Track rows injected here -->
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- RIGHT DRAWER: Now Playing View / Queue / Lyrics -->
+            <aside class="right-panel" id="right-panel" style="display: none;">
+                <div class="right-panel-header">
+                    <h3 id="right-panel-title">Now Playing</h3>
+                    <button class="icon-btn-ghost close-panel-btn" id="close-right-panel-btn">✕</button>
                 </div>
 
-                <div class="progress-container">
-                    <span id="current-time">0:00</span>
-                    <input type="range" id="progress" value="0" min="0" max="100" aria-label="Song progress">
-                    <span id="duration">0:00</span>
+                <!-- Tab 1: Now Playing View -->
+                <div class="right-panel-tab-content" id="tab-now-playing">
+                    <div class="now-playing-large-art">
+                        <img src="" alt="Album Artwork" id="right-panel-art">
+                    </div>
+                    <div class="now-playing-details">
+                        <div class="details-left">
+                            <h2 id="right-panel-title-text" class="song-title-truncate">No Song Playing</h2>
+                            <p id="right-panel-artist-text" class="artist-name-truncate">Select a song to start</p>
+                        </div>
+                        <button class="heart-icon-btn" id="right-panel-heart-btn" title="Add to Liked Songs">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        </button>
+                    </div>
+
+                    <!-- Audio Visualizer Canvas -->
+                    <div class="visualizer-card">
+                        <div class="visualizer-header">
+                            <span>Audio Spectrum</span>
+                            <span class="live-dot">● LIVE</span>
+                        </div>
+                        <canvas id="visualizer-canvas" width="300" height="90"></canvas>
+                    </div>
+
+                    <!-- About Artist Card -->
+                    <div class="artist-about-card">
+                        <div class="artist-about-header">About the artist</div>
+                        <div class="artist-about-name" id="right-panel-about-artist">Artist</div>
+                        <p class="artist-about-bio" id="right-panel-about-bio">High-fidelity audio stream powered by iTunes Engine.</p>
+                    </div>
                 </div>
 
-                <div class="volume-control">
-                    <label for="volume">🔊</label>
-                    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5">
+                <!-- Tab 2: Queue View -->
+                <div class="right-panel-tab-content" id="tab-queue" style="display: none;">
+                    <div class="queue-section-header">Now Playing</div>
+                    <div class="queue-item current" id="queue-current-item">
+                        <img src="" id="queue-current-img" class="queue-thumb">
+                        <div class="queue-info">
+                            <div class="queue-title" id="queue-current-title">-</div>
+                            <div class="queue-artist" id="queue-current-artist">-</div>
+                        </div>
+                    </div>
+
+                    <div class="queue-section-header" style="margin-top: 24px;">Next In Queue</div>
+                    <div class="queue-list" id="queue-list">
+                        <!-- Up next items -->
+                    </div>
+                </div>
+
+                <!-- Tab 3: Synced Lyrics View -->
+                <div class="right-panel-tab-content" id="tab-lyrics" style="display: none;">
+                    <div class="lyrics-scroll-box" id="lyrics-scroll-box">
+                        <div class="lyrics-placeholder" id="lyrics-loading-text">Play a song to see lyrics...</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- BOTTOM PERSISTENT PLAYER BAR -->
+        <footer class="player-bar" id="player-bar">
+            <!-- Left: Current Track Details -->
+            <div class="player-left">
+                <div class="track-thumb-box">
+                    <img src="" alt="" id="player-thumb" class="player-thumb">
+                    <div class="thumb-placeholder" id="player-thumb-placeholder">🎵</div>
+                </div>
+                <div class="track-info-box">
+                    <div class="track-name" id="player-track-name">Select a song</div>
+                    <div class="track-artist" id="player-track-artist">Spotify Clone</div>
+                </div>
+                <button class="heart-icon-btn" id="player-heart-btn" title="Add to Liked Songs">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+            </div>
+
+            <!-- Center: Player Controls + Progress Bar -->
+            <div class="player-center">
+                <div class="playback-controls">
+                    <!-- Shuffle Button -->
+                    <button class="control-btn" id="shuffle-btn" title="Enable Smart Shuffle">
+                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.151.922a.75.75 0 1 0-1.06 1.06L13.109 3H11.16a3.75 3.75 0 0 0-2.873 1.34l-6.173 7.356A2.25 2.25 0 0 1 .39 12.5H0V14h.391a3.75 3.75 0 0 0 2.873-1.34l6.173-7.356a2.25 2.25 0 0 1 1.724-.804h1.947l-1.017 1.018a.75.75 0 0 0 1.06 1.06L15.98 3.75 13.15.922zM.391 3.5H0V2h.391c.7 0 1.366.278 1.86.772l1.656 1.656a.75.75 0 0 1-1.06 1.06L1.191 3.832A2.24 2.24 0 0 0 .39 3.5zm9.845 7.155a.75.75 0 0 1 1.06 0l1.854 1.853h1.959l-1.017-1.018a.75.75 0 0 1 1.06-1.06l2.829 2.828-2.829 2.828a.75.75 0 0 1-1.06-1.06l1.017-1.018H13.15a3.75 3.75 0 0 1-2.873-1.34l-1.656-1.973a.75.75 0 0 1 .015-1.08z"/></svg>
+                        <span class="active-dot"></span>
+                    </button>
+
+                    <!-- Previous Button -->
+                    <button class="control-btn" id="prev-btn" title="Previous">
+                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.576a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"/></svg>
+                    </button>
+
+                    <!-- Play / Pause Circular Button -->
+                    <button class="play-pause-btn" id="play-pause-btn" title="Play">
+                        <svg id="play-icon-svg" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/></svg>
+                        <svg id="pause-icon-svg" viewBox="0 0 16 16" fill="currentColor" style="display: none;"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"/></svg>
+                    </button>
+
+                    <!-- Next Button -->
+                    <button class="control-btn" id="next-btn" title="Next">
+                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.576a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"/></svg>
+                    </button>
+
+                    <!-- Repeat Button -->
+                    <button class="control-btn" id="repeat-btn" title="Enable Repeat">
+                        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 1 1 1.06 1.06L9.811 12h2.439a2.25 2.25 0 0 0 2.25-2.25v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75v-5z"/></svg>
+                        <span class="active-dot"></span>
+                        <span class="repeat-one-badge" id="repeat-one-indicator" style="display: none;">1</span>
+                    </button>
+                </div>
+
+                <!-- Progress Bar & Timers -->
+                <div class="playback-bar-wrapper">
+                    <span class="time-label" id="current-time-text">0:00</span>
+                    <div class="progress-bar-groove" id="progress-bar-container">
+                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                        <div class="progress-thumb" id="progress-thumb"></div>
+                    </div>
+                    <span class="time-label" id="duration-time-text">0:00</span>
                 </div>
             </div>
 
-            <div class="playlist-section">
-                <ul id="playlist">
-                    <!-- Current playing playlist generated by JS -->
-                </ul>
+            <!-- Right: Secondary Controls (Now Playing, Lyrics, Queue, Volume, Fullscreen) -->
+            <div class="player-right">
+                <button class="icon-toggle-btn" id="now-playing-panel-toggle" title="Now playing view">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M11.196 8 6 5v6l5.196-3zM15 1.5H1A1.5 1.5 0 0 0-.5 3v10A1.5 1.5 0 0 0 1 14.5h14a1.5 1.5 0 0 0 1.5-1.5V3a1.5 1.5 0 0 0-1.5-1.5zM1 3h14v10H1V3z"/></svg>
+                </button>
+                <button class="icon-toggle-btn" id="lyrics-panel-toggle" title="Lyrics">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.426 2.574a2.831 2.831 0 0 0-4.797 1.55l3.247 3.247a2.831 2.831 0 0 0 1.55-4.797zM10.5 8.75 7.253 5.503l-5.6 5.6a1 1 0 0 0-.27.493L.5 15.5l3.904-.883a1 1 0 0 0 .493-.27l5.603-5.597z"/></svg>
+                </button>
+                <button class="icon-toggle-btn" id="queue-panel-toggle" title="Queue">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M15 15H1v-1.5h14V15zm0-4.5H1V9h14v1.5zm-14-7A2.5 2.5 0 0 1 3.5 1h9a2.5 2.5 0 0 1 2.5 2.5v2H1v-2zm2.5-1A1 1 0 0 0 2.5 3.5V4h11v-.5a1 1 0 0 0-1-1h-9z"/></svg>
+                </button>
 
-                <div class="playlist-manager">
-                    <h3>My Playlists</h3>
-                    <div class="playlist-controls">
-                        <input type="text" id="new-playlist-name" placeholder="New playlist name" aria-label="New playlist name">
-                        <button id="create-playlist-btn">Create</button>
-                        <button id="save-playlist-btn">Save Current</button>
+                <!-- Volume Group -->
+                <div class="volume-bar-wrapper">
+                    <button class="volume-icon-btn" id="volume-mute-btn" title="Mute">
+                        <svg id="volume-high-svg" viewBox="0 0 16 16" fill="currentColor"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4H0V4.85h2.066l6.925-4a.75.75 0 0 1 .75 0zM12 4a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-1.5 0v-6.5A.75.75 0 0 1 12 4zm2.5 1.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75z"/></svg>
+                        <svg id="volume-muted-svg" viewBox="0 0 16 16" fill="currentColor" style="display: none;"><path d="m13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53l1.47 1.47-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06l-1.47-1.47 1.47-1.47a.75.75 0 0 0 0-1.06zM9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4H0V4.85h2.066l6.925-4a.75.75 0 0 1 .75 0z"/></svg>
+                    </button>
+                    <div class="volume-groove" id="volume-groove">
+                        <div class="volume-fill" id="volume-fill" style="width: 70%;"></div>
+                        <div class="volume-thumb" id="volume-thumb"></div>
                     </div>
-                    <select id="saved-playlists" aria-label="Select a saved playlist">
-                        <option value="">Load Playlist</option>
-                    </select>
-                    <button id="load-playlist-btn">Load</button>
-                    <button id="delete-playlist-btn">Delete</button>
+                </div>
+
+                <!-- Fullscreen Theater Button -->
+                <button class="icon-toggle-btn" id="theater-fullscreen-btn" title="Full screen">
+                    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72H6a.75.75 0 0 1 0 1.5H1.75A.75.75 0 0 1 1 14v-4.25a.75.75 0 0 1 1.5 0v2.19l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94 0a.75.75 0 0 1 1.06 0l2.72 2.72V10a.75.75 0 0 1 1.5 0v4.25a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1 0-1.5h2.19l-2.72-2.72a.75.75 0 0 1 0-1.06zM1.75 1A.75.75 0 0 1 2.5 1.75V4a.75.75 0 0 1-1.5 0V1.75A.75.75 0 0 1 1.75 1zm12.5 0a.75.75 0 0 1 .75.75V4a.75.75 0 0 1-1.5 0V1.75a.75.75 0 0 1 .75-.75z"/></svg>
+                </button>
+            </div>
+        </footer>
+
+        <!-- Hidden Native Audio Element -->
+        <audio id="audio-engine" crossorigin="anonymous" preload="auto"></audio>
+
+        <!-- FULL-SCREEN THEATER OVERLAY -->
+        <div class="fullscreen-theater" id="fullscreen-theater" style="display: none;">
+            <div class="theater-background" id="theater-backdrop"></div>
+            <div class="theater-top-bar">
+                <div class="theater-brand">
+                    <svg class="spotify-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.508 17.308c-.218.358-.684.474-1.042.256-2.856-1.745-6.452-2.14-10.686-1.172-.41.094-.817-.162-.911-.572-.094-.41.162-.817.572-.911 4.636-1.06 8.607-.615 11.811 1.348.358.218.474.693.256 1.051zm1.47-3.263c-.276.446-.86.589-1.306.313-3.269-2.008-8.25-2.59-12.115-1.417-.502.152-1.033-.134-1.185-.636-.152-.502.134-1.033.636-1.185 4.414-1.34 9.914-.688 13.657 1.619.446.276.589.86.313 1.306zm.126-3.41c-3.918-2.327-10.375-2.541-14.11-1.407-.602.182-1.242-.162-1.424-.764-.182-.602.162-1.242.764-1.424 4.29-1.302 11.417-1.055 15.932 1.626.541.321.716 1.02.395 1.561-.321.541-1.02.716-1.557.408z"/></svg>
+                    <span>Now Playing in Theater Mode</span>
+                </div>
+                <button class="theater-exit-btn" id="theater-exit-btn">✕ Exit Theater</button>
+            </div>
+            <div class="theater-content">
+                <div class="theater-art-box">
+                    <img src="" id="theater-cover-art" alt="Album Cover">
+                    <div class="theater-meta">
+                        <h1 id="theater-title">Song Title</h1>
+                        <p id="theater-artist">Artist Name</p>
+                    </div>
+                </div>
+                <div class="theater-lyrics-box" id="theater-lyrics-box">
+                    <div class="lyrics-karaoke-stream" id="theater-lyrics-stream">
+                        <!-- Timed lyrics streaming -->
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- MODAL: Authentication / User Profile -->
+        <div class="modal-backdrop" id="auth-modal" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-header">
+                    <h2 id="auth-modal-title">Log in to Spotify</h2>
+                    <button class="modal-close-btn" id="close-auth-modal-btn">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-tabs">
+                        <button class="auth-tab-btn active" id="tab-login-btn">Log In</button>
+                        <button class="auth-tab-btn" id="tab-register-btn">Sign Up</button>
+                    </div>
+                    <form id="auth-form" class="auth-form">
+                        <div class="form-group">
+                            <label for="modal-username">Username</label>
+                            <input type="text" id="modal-username" placeholder="Username or email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-password">Password</label>
+                            <input type="password" id="modal-password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="spotify-btn-green" id="auth-submit-btn">Log In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Equalizer & Audio FX -->
+        <div class="modal-backdrop" id="eq-modal" style="display: none;">
+            <div class="modal-dialog eq-dialog">
+                <div class="modal-header">
+                    <h2>🎛️ Spotify Audio Equalizer</h2>
+                    <button class="modal-close-btn" id="close-eq-modal-btn">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="eq-presets-row">
+                        <label>Preset:</label>
+                        <select id="eq-preset-select" class="eq-select">
+                            <option value="flat">Flat (Default)</option>
+                            <option value="bass">Bass Boost</option>
+                            <option value="vocal">Vocal Booster</option>
+                            <option value="treble">Treble Boost</option>
+                            <option value="rock">Rock</option>
+                            <option value="electronic">Electronic / EDM</option>
+                        </select>
+                    </div>
+                    <div class="eq-sliders-container">
+                        <div class="eq-band">
+                            <span class="eq-gain" id="gain-60">0dB</span>
+                            <input type="range" class="eq-slider" orient="vertical" id="slider-60" min="-12" max="12" step="1" value="0">
+                            <span class="eq-freq">60Hz</span>
+                        </div>
+                        <div class="eq-band">
+                            <span class="eq-gain" id="gain-250">0dB</span>
+                            <input type="range" class="eq-slider" orient="vertical" id="slider-250" min="-12" max="12" step="1" value="0">
+                            <span class="eq-freq">250Hz</span>
+                        </div>
+                        <div class="eq-band">
+                            <span class="eq-gain" id="gain-1k">0dB</span>
+                            <input type="range" class="eq-slider" orient="vertical" id="slider-1k" min="-12" max="12" step="1" value="0">
+                            <span class="eq-freq">1kHz</span>
+                        </div>
+                        <div class="eq-band">
+                            <span class="eq-gain" id="gain-4k">0dB</span>
+                            <input type="range" class="eq-slider" orient="vertical" id="slider-4k" min="-12" max="12" step="1" value="0">
+                            <span class="eq-freq">4kHz</span>
+                        </div>
+                        <div class="eq-band">
+                            <span class="eq-gain" id="gain-12k">0dB</span>
+                            <input type="range" class="eq-slider" orient="vertical" id="slider-12k" min="-12" max="12" step="1" value="0">
+                            <span class="eq-freq">12kHz</span>
+                        </div>
+                    </div>
+                    <!-- Crossfade Slider -->
+                    <div class="crossfade-row">
+                        <div class="crossfade-labels">
+                            <span>Song Crossfade</span>
+                            <span id="crossfade-value-label">3s</span>
+                        </div>
+                        <input type="range" id="crossfade-slider" min="0" max="10" step="1" value="3">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: Stats & Wrapped -->
+        <div class="modal-backdrop" id="wrapped-modal" style="display: none;">
+            <div class="modal-dialog wrapped-dialog">
+                <div class="modal-header">
+                    <h2>✨ Your Session Wrapped</h2>
+                    <button class="modal-close-btn" id="close-wrapped-modal-btn">✕</button>
+                </div>
+                <div class="modal-body wrapped-body">
+                    <div class="wrapped-stat-card">
+                        <div class="stat-number" id="stats-minutes-played">0</div>
+                        <div class="stat-label">Minutes Listened</div>
+                    </div>
+                    <div class="wrapped-stat-card">
+                        <div class="stat-number" id="stats-songs-played">0</div>
+                        <div class="stat-label">Songs Played</div>
+                    </div>
+                    <div class="wrapped-stat-card highlight">
+                        <div class="stat-subtitle">Top Artist Today</div>
+                        <div class="stat-top-title" id="stats-top-artist">-</div>
+                    </div>
+                    <div class="wrapped-stat-card">
+                        <div class="stat-subtitle">Most Played Track</div>
+                        <div class="stat-top-title" id="stats-top-song">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Notification Pill -->
+        <div class="toast-pill" id="toast-pill">Added to Liked Songs</div>
+
     </div>
 
+    <!-- Application JavaScript Engine -->
     <script src="script.js"></script>
 </body>
 </html>
